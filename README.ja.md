@@ -5,7 +5,7 @@
 Azure Static Web Apps (SWA) の招待Discussionの有効期限切れを自動削除するGitHub Actionです。[`swa-github-role-sync`](https://github.com/nuitsjp/swa-github-role-sync)と組み合わせて使用することで、招待リンクのライフサイクル管理を完結させることができます。
 
 > **お知らせ**
-> 運用ワークフローは [`nuitsjp/swa-github-workflows`](https://github.com/nuitsjp/swa-github-workflows) で管理されています。本リポジトリはAction本体のみを管理します。
+> 運用ワークフローは [`nuitsjp/swa-github-role-sync-ops`](https://github.com/nuitsjp/swa-github-role-sync-ops) で管理されています。本リポジトリはAction本体のみを管理します。
 
 ## 概要
 

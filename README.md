@@ -5,7 +5,7 @@
 GitHub Action that deletes expired Azure Static Web Apps (SWA) invitation Discussions. It is designed to complement [`swa-github-role-sync`](https://github.com/nuitsjp/swa-github-role-sync) workflows by cleaning up temporary invite threads once the expiration window passes.
 
 > **Note**
-> Operational workflows are maintained in [`nuitsjp/swa-github-workflows`](https://github.com/nuitsjp/swa-github-workflows). This repository only hosts the Action code itself.
+> Operational workflows are maintained in [`nuitsjp/swa-github-role-sync-ops`](https://github.com/nuitsjp/swa-github-role-sync-ops). This repository only hosts the Action code itself.
 
 ## Overview
 
