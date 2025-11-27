@@ -6,7 +6,7 @@
 [![swa-github-role-sync](https://img.shields.io/github/v/release/nuitsjp/swa-github-role-sync?label=role-sync)](https://github.com/nuitsjp/swa-github-role-sync/releases/latest)
 [![swa-github-discussion-cleanup](https://img.shields.io/github/v/release/nuitsjp/swa-github-discussion-cleanup?label=discussion-cleanup)](https://github.com/nuitsjp/swa-github-discussion-cleanup/releases/latest)
 
-[日本語](README.ja.md)
+[Japanese](README.ja.md)
 
 Provides reusable GitHub Actions for controlling access to Azure Static Web Apps (SWA) based on GitHub repository permissions.
 
