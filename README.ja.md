@@ -38,10 +38,10 @@ GitHubリポジトリに関連するドキュメントをSWAで公開する場�
 
 本リポジトリは以下の2つの再利用可能なGitHub Actionsを提供します：
 
-| Action | 説明 |
-|--------|------|
-| [swa-github-role-sync](https://github.com/nuitsjp/swa-github-role-sync) | GitHubリポジトリの権限を持つユーザーをSWAカスタムロールへ同期し、招待リンクをDiscussionで通知 |
-| [swa-github-discussion-cleanup](https://github.com/nuitsjp/swa-github-discussion-cleanup) | 有効期限切れの招待Discussionを自動削除 |
+| Action                                                                                    | 説明                                                                                          |
+| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| [swa-github-role-sync](https://github.com/nuitsjp/swa-github-role-sync)                   | GitHubリポジトリの権限を持つユーザーをSWAカスタムロールへ同期し、招待リンクをDiscussionで通知 |
+| [swa-github-discussion-cleanup](https://github.com/nuitsjp/swa-github-discussion-cleanup) | 有効期限切れの招待Discussionを自動削除                                                        |
 
 ## Features
 
@@ -82,14 +82,14 @@ Azureリソース（Static Web App、マネージドID等）が既に存在す�
 
 以下のSecretsをリポジトリまたはOrganizationに登録してください：
 
-| Secret | 説明 |
-|--------|------|
-| `AZURE_CLIENT_ID` | Azure OIDC認証用のクライアントID |
-| `AZURE_TENANT_ID` | AzureテナントID |
-| `AZURE_SUBSCRIPTION_ID` | AzureサブスクリプションID |
-| `AZURE_STATIC_WEB_APPS_API_TOKEN` | SWAデプロイ用トークン |
-| `ROLE_SYNC_APP_ID` | GitHub AppのID |
-| `ROLE_SYNC_APP_PRIVATE_KEY` | GitHub Appの秘密鍵 |
+| Secret                            | 説明                             |
+| --------------------------------- | -------------------------------- |
+| `AZURE_CLIENT_ID`                 | Azure OIDC認証用のクライアントID |
+| `AZURE_TENANT_ID`                 | AzureテナントID                  |
+| `AZURE_SUBSCRIPTION_ID`           | AzureサブスクリプションID        |
+| `AZURE_STATIC_WEB_APPS_API_TOKEN` | SWAデプロイ用トークン            |
+| `ROLE_SYNC_APP_ID`                | GitHub AppのID                   |
+| `ROLE_SYNC_APP_PRIVATE_KEY`       | GitHub Appの秘密鍵               |
 
 #### GitHub Appの作成メモ（UI操作）
 
@@ -148,7 +148,13 @@ SWA側でロールベースのアクセス制御を有効にするには、`stat
     },
     {
       "route": "/*",
-      "allowedRoles": ["github-admin", "github-maintain", "github-write", "github-triage", "github-read"]
+      "allowedRoles": [
+        "github-admin",
+        "github-maintain",
+        "github-write",
+        "github-triage",
+        "github-read"
+      ]
     }
   ],
   "responseOverrides": {
@@ -165,6 +171,7 @@ SWA側でロールベースのアクセス制御を有効にするには、`stat
 ```
 
 この例では:
+
 - `/admin/*`: `github-admin`ロールのみアクセス可能
 - `/internal/*`: `github-admin`, `github-maintain`, `github-write`ロールがアクセス可能
 - `/*`: すべての同期対象ロールがアクセス可能
@@ -313,11 +320,11 @@ SWA URL: https://white-pond-06cee3400.3.azurestaticapps.net
 
 Azure Cloud Adoption Frameworkの[リソース省略形ガイダンス](https://learn.microsoft.com/ja-jp/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations)に基づき、以下の命名規則を使用します。
 
-| リソース種別 | プレフィクス | 命名例 |
-|-------------|-------------|--------|
-| リソースグループ | `rg` | `rg-swa-github-role-sync-ops-prod` |
-| Static Web App | `stapp` | `stapp-swa-github-role-sync-ops-prod` |
-| マネージドID | `id` | `id-swa-github-role-sync-ops-prod` |
+| リソース種別     | プレフィクス | 命名例                                |
+| ---------------- | ------------ | ------------------------------------- |
+| リソースグループ | `rg`         | `rg-swa-github-role-sync-ops-prod`    |
+| Static Web App   | `stapp`      | `stapp-swa-github-role-sync-ops-prod` |
+| マネージドID     | `id`         | `id-swa-github-role-sync-ops-prod`    |
 
 ## Configuration
 
@@ -325,13 +332,13 @@ Azure Cloud Adoption Frameworkの[リソース省略形ガイダンス](https://
 
 `minimum-permission`で同期対象とする最小権限レベルを指定できます：
 
-| `minimum-permission` | 同期対象 |
-|---------------------|---------|
-| `read` | read, triage, write, maintain, admin |
-| `triage` | triage, write, maintain, admin |
-| `write` | write, maintain, admin（デフォルト） |
-| `maintain` | maintain, admin |
-| `admin` | adminのみ |
+| `minimum-permission` | 同期対象                             |
+| -------------------- | ------------------------------------ |
+| `read`               | read, triage, write, maintain, admin |
+| `triage`             | triage, write, maintain, admin       |
+| `write`              | write, maintain, admin（デフォルト） |
+| `maintain`           | maintain, admin                      |
+| `admin`              | adminのみ                            |
 
 ```yaml
 - uses: nuitsjp/swa-github-role-sync@v1
@@ -340,20 +347,20 @@ Azure Cloud Adoption Frameworkの[リソース省略形ガイダンス](https://
     swa-name: my-swa-app
     swa-resource-group: my-swa-rg
     discussion-category-name: Announcements
-    minimum-permission: read  # read以上の全ユーザーを同期
+    minimum-permission: read # read以上の全ユーザーを同期
 ```
 
 ### ロール名をカスタマイズする
 
 各GitHub権限に対応するSWAロール名を個別に設定できます：
 
-| パラメーター | デフォルト | 説明 |
-|-------------|-----------|------|
-| `role-for-admin` | `github-admin` | admin権限のSWAロール |
+| パラメーター        | デフォルト        | 説明                    |
+| ------------------- | ----------------- | ----------------------- |
+| `role-for-admin`    | `github-admin`    | admin権限のSWAロール    |
 | `role-for-maintain` | `github-maintain` | maintain権限のSWAロール |
-| `role-for-write` | `github-write` | write権限のSWAロール |
-| `role-for-triage` | `github-triage` | triage権限のSWAロール |
-| `role-for-read` | `github-read` | read権限のSWAロール |
+| `role-for-write`    | `github-write`    | write権限のSWAロール    |
+| `role-for-triage`   | `github-triage`   | triage権限のSWAロール   |
+| `role-for-read`     | `github-read`     | read権限のSWAロール     |
 
 ### その他の設定
 
@@ -374,10 +381,10 @@ Azure Cloud Adoption Frameworkの[リソース省略形ガイダンス](https://
 
 ## Documentation
 
-| ドキュメント | 内容 |
-|-------------|------|
-| [docs/developer-guide.ja.md](docs/developer-guide.ja.md) | 開発環境構築、テスト、リリース手順 |
-| [swa-github-role-sync](https://github.com/nuitsjp/swa-github-role-sync) | Role Sync Actionの詳細なドキュメント |
+| ドキュメント                                                                              | 内容                                          |
+| ----------------------------------------------------------------------------------------- | --------------------------------------------- |
+| [docs/developer-guide.ja.md](docs/developer-guide.ja.md)                                  | 開発環境構築、テスト、リリース手順            |
+| [swa-github-role-sync](https://github.com/nuitsjp/swa-github-role-sync)                   | Role Sync Actionの詳細なドキュメント          |
 | [swa-github-discussion-cleanup](https://github.com/nuitsjp/swa-github-discussion-cleanup) | Discussion Cleanup Actionの詳細なドキュメント |
 
 ## License

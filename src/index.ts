@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { graphql } from '@octokit/graphql'
 
-type Inputs = {
+export type Inputs = {
   githubToken: string
   targetRepo?: string
   discussionCategoryName: string
@@ -11,14 +11,14 @@ type Inputs = {
   cleanupMode: 'expiration' | 'immediate'
 }
 
-type DiscussionNode = {
+export type DiscussionNode = {
   id: string
   title: string
   createdAt: string
   url: string
 }
 
-function parseTargetRepo(
+export function parseTargetRepo(
   input: string | undefined,
   contextRepo = github.context.repo
 ): { owner: string; repo: string } {
@@ -32,7 +32,7 @@ function parseTargetRepo(
   return { owner, repo }
 }
 
-function getInputs(): Inputs {
+export function getInputs(): Inputs {
   return {
     githubToken: core.getInput('github-token', { required: true }),
     targetRepo: core.getInput('target-repo'),
@@ -49,10 +49,23 @@ function getInputs(): Inputs {
   }
 }
 
-function createTitleRegex(template: string): RegExp {
+export function createTitleRegex(template: string): RegExp {
   const escaped = template.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const pattern = escaped.replace(/\\\{(\w+)\\\}/g, '.*?')
   return new RegExp(`^${pattern}$`)
+}
+
+export function shouldDeleteDiscussion(
+  discussion: DiscussionNode,
+  titleRegex: RegExp,
+  expirationDate: Date,
+  cleanupMode: 'expiration' | 'immediate'
+): boolean {
+  const createdAt = new Date(discussion.createdAt)
+  const isExpired =
+    cleanupMode === 'immediate' ? true : createdAt < expirationDate
+  const isMatch = titleRegex.test(discussion.title)
+  return isExpired && isMatch
 }
 
 async function deleteDiscussion(
@@ -152,18 +165,24 @@ export async function run(): Promise<void> {
     let deletedCount = 0
 
     for (const discussion of discussions) {
-      const createdAt = new Date(discussion.createdAt)
-      const isExpired =
-        inputs.cleanupMode === 'immediate' ? true : createdAt < expirationDate
-      const isMatch = titleRegex.test(discussion.title)
-
-      if (isExpired && isMatch) {
+      if (
+        shouldDeleteDiscussion(
+          discussion,
+          titleRegex,
+          expirationDate,
+          inputs.cleanupMode
+        )
+      ) {
         core.info(
           `Deleting expired discussion: "${discussion.title}" (${discussion.url}) created at ${discussion.createdAt}`
         )
         await deleteDiscussion(inputs.githubToken, discussion.id)
         deletedCount++
       } else {
+        const createdAt = new Date(discussion.createdAt)
+        const isExpired =
+          inputs.cleanupMode === 'immediate' ? true : createdAt < expirationDate
+        const isMatch = titleRegex.test(discussion.title)
         core.debug(
           `Skipping: "${discussion.title}" (Expired: ${isExpired}, Match: ${isMatch})`
         )
@@ -180,6 +199,3 @@ export async function run(): Promise<void> {
     }
   }
 }
-
-/* istanbul ignore next */
-run()

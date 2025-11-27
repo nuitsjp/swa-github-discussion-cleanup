@@ -38,10 +38,10 @@ When publishing documentation related to a GitHub repository on SWA, the followi
 
 This repository provides the following two reusable GitHub Actions:
 
-| Action | Description |
-|--------|-------------|
-| [swa-github-role-sync](https://github.com/nuitsjp/swa-github-role-sync) | Syncs users with GitHub repository permissions to SWA custom roles and notifies them via Discussion with invitation links |
-| [swa-github-discussion-cleanup](https://github.com/nuitsjp/swa-github-discussion-cleanup) | Automatically deletes expired invitation Discussions |
+| Action                                                                                    | Description                                                                                                               |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| [swa-github-role-sync](https://github.com/nuitsjp/swa-github-role-sync)                   | Syncs users with GitHub repository permissions to SWA custom roles and notifies them via Discussion with invitation links |
+| [swa-github-discussion-cleanup](https://github.com/nuitsjp/swa-github-discussion-cleanup) | Automatically deletes expired invitation Discussions                                                                      |
 
 ## Features
 
@@ -82,14 +82,14 @@ If Azure resources (Static Web App, managed identity, etc.) already exist, start
 
 Register the following Secrets in your repository or Organization:
 
-| Secret | Description |
-|--------|-------------|
-| `AZURE_CLIENT_ID` | Client ID for Azure OIDC authentication |
-| `AZURE_TENANT_ID` | Azure tenant ID |
-| `AZURE_SUBSCRIPTION_ID` | Azure subscription ID |
-| `AZURE_STATIC_WEB_APPS_API_TOKEN` | SWA deployment token |
-| `ROLE_SYNC_APP_ID` | GitHub App ID |
-| `ROLE_SYNC_APP_PRIVATE_KEY` | GitHub App private key |
+| Secret                            | Description                             |
+| --------------------------------- | --------------------------------------- |
+| `AZURE_CLIENT_ID`                 | Client ID for Azure OIDC authentication |
+| `AZURE_TENANT_ID`                 | Azure tenant ID                         |
+| `AZURE_SUBSCRIPTION_ID`           | Azure subscription ID                   |
+| `AZURE_STATIC_WEB_APPS_API_TOKEN` | SWA deployment token                    |
+| `ROLE_SYNC_APP_ID`                | GitHub App ID                           |
+| `ROLE_SYNC_APP_PRIVATE_KEY`       | GitHub App private key                  |
 
 #### GitHub App Creation Notes (UI Operations)
 
@@ -148,7 +148,13 @@ Example of separating admin-only areas from general user areas:
     },
     {
       "route": "/*",
-      "allowedRoles": ["github-admin", "github-maintain", "github-write", "github-triage", "github-read"]
+      "allowedRoles": [
+        "github-admin",
+        "github-maintain",
+        "github-write",
+        "github-triage",
+        "github-read"
+      ]
     }
   ],
   "responseOverrides": {
@@ -165,6 +171,7 @@ Example of separating admin-only areas from general user areas:
 ```
 
 In this example:
+
 - `/admin/*`: Accessible only by `github-admin` role
 - `/internal/*`: Accessible by `github-admin`, `github-maintain`, `github-write` roles
 - `/*`: Accessible by all synced roles
@@ -313,11 +320,11 @@ The script automatically executes the following:
 
 Based on the Azure Cloud Adoption Framework's [resource abbreviation guidance](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations), the following naming conventions are used:
 
-| Resource Type | Prefix | Example |
-|---------------|--------|---------|
-| Resource Group | `rg` | `rg-swa-github-role-sync-ops-prod` |
-| Static Web App | `stapp` | `stapp-swa-github-role-sync-ops-prod` |
-| Managed Identity | `id` | `id-swa-github-role-sync-ops-prod` |
+| Resource Type    | Prefix  | Example                               |
+| ---------------- | ------- | ------------------------------------- |
+| Resource Group   | `rg`    | `rg-swa-github-role-sync-ops-prod`    |
+| Static Web App   | `stapp` | `stapp-swa-github-role-sync-ops-prod` |
+| Managed Identity | `id`    | `id-swa-github-role-sync-ops-prod`    |
 
 ## Configuration
 
@@ -325,13 +332,13 @@ Based on the Azure Cloud Adoption Framework's [resource abbreviation guidance](h
 
 Use `minimum-permission` to specify the minimum permission level for sync targets:
 
-| `minimum-permission` | Sync Targets |
-|---------------------|--------------|
-| `read` | read, triage, write, maintain, admin |
-| `triage` | triage, write, maintain, admin |
-| `write` | write, maintain, admin (default) |
-| `maintain` | maintain, admin |
-| `admin` | admin only |
+| `minimum-permission` | Sync Targets                         |
+| -------------------- | ------------------------------------ |
+| `read`               | read, triage, write, maintain, admin |
+| `triage`             | triage, write, maintain, admin       |
+| `write`              | write, maintain, admin (default)     |
+| `maintain`           | maintain, admin                      |
+| `admin`              | admin only                           |
 
 ```yaml
 - uses: nuitsjp/swa-github-role-sync@v1
@@ -340,20 +347,20 @@ Use `minimum-permission` to specify the minimum permission level for sync target
     swa-name: my-swa-app
     swa-resource-group: my-swa-rg
     discussion-category-name: Announcements
-    minimum-permission: read  # Sync all users with read or above
+    minimum-permission: read # Sync all users with read or above
 ```
 
 ### Customizing Role Names
 
 You can configure SWA role names corresponding to each GitHub permission:
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `role-for-admin` | `github-admin` | SWA role for admin permission |
+| Parameter           | Default           | Description                      |
+| ------------------- | ----------------- | -------------------------------- |
+| `role-for-admin`    | `github-admin`    | SWA role for admin permission    |
 | `role-for-maintain` | `github-maintain` | SWA role for maintain permission |
-| `role-for-write` | `github-write` | SWA role for write permission |
-| `role-for-triage` | `github-triage` | SWA role for triage permission |
-| `role-for-read` | `github-read` | SWA role for read permission |
+| `role-for-write`    | `github-write`    | SWA role for write permission    |
+| `role-for-triage`   | `github-triage`   | SWA role for triage permission   |
+| `role-for-read`     | `github-read`     | SWA role for read permission     |
 
 ### Other Settings
 
@@ -374,11 +381,11 @@ You can configure SWA role names corresponding to each GitHub permission:
 
 ## Documentation
 
-| Document | Contents |
-|----------|----------|
-| [docs/developer-guide.md](docs/developer-guide.md) | Development environment setup, testing, and release procedures |
-| [swa-github-role-sync](https://github.com/nuitsjp/swa-github-role-sync) | Detailed documentation for Role Sync Action |
-| [swa-github-discussion-cleanup](https://github.com/nuitsjp/swa-github-discussion-cleanup) | Detailed documentation for Discussion Cleanup Action |
+| Document                                                                                  | Contents                                                       |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| [docs/developer-guide.md](docs/developer-guide.md)                                        | Development environment setup, testing, and release procedures |
+| [swa-github-role-sync](https://github.com/nuitsjp/swa-github-role-sync)                   | Detailed documentation for Role Sync Action                    |
+| [swa-github-discussion-cleanup](https://github.com/nuitsjp/swa-github-discussion-cleanup) | Detailed documentation for Discussion Cleanup Action           |
 
 ## License
 

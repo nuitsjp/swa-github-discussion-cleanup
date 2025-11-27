@@ -35233,6 +35233,18 @@ function createTitleRegex(template) {
   const pattern = escaped.replace(/\\\{(\w+)\\\}/g, '.*?')
   return new RegExp(`^${pattern}$`)
 }
+function shouldDeleteDiscussion(
+  discussion,
+  titleRegex,
+  expirationDate,
+  cleanupMode
+) {
+  const createdAt = new Date(discussion.createdAt)
+  const isExpired =
+    cleanupMode === 'immediate' ? true : createdAt < expirationDate
+  const isMatch = titleRegex.test(discussion.title)
+  return isExpired && isMatch
+}
 async function deleteDiscussion(token, discussionId) {
   const graphqlClient = graphql2.defaults({
     headers: { authorization: `token ${token}` }
@@ -35304,17 +35316,24 @@ async function run() {
     coreExports.info(`Found ${discussions.length} discussions in category.`)
     let deletedCount = 0
     for (const discussion of discussions) {
-      const createdAt = new Date(discussion.createdAt)
-      const isExpired =
-        inputs.cleanupMode === 'immediate' ? true : createdAt < expirationDate
-      const isMatch = titleRegex.test(discussion.title)
-      if (isExpired && isMatch) {
+      if (
+        shouldDeleteDiscussion(
+          discussion,
+          titleRegex,
+          expirationDate,
+          inputs.cleanupMode
+        )
+      ) {
         coreExports.info(
           `Deleting expired discussion: "${discussion.title}" (${discussion.url}) created at ${discussion.createdAt}`
         )
         await deleteDiscussion(inputs.githubToken, discussion.id)
         deletedCount++
       } else {
+        const createdAt = new Date(discussion.createdAt)
+        const isExpired =
+          inputs.cleanupMode === 'immediate' ? true : createdAt < expirationDate
+        const isMatch = titleRegex.test(discussion.title)
         coreExports.debug(
           `Skipping: "${discussion.title}" (Expired: ${isExpired}, Match: ${isMatch})`
         )
@@ -35330,8 +35349,10 @@ async function run() {
     }
   }
 }
+
+/**
+ * GitHub Actionのエントリーポイント。メイン処理を読み込んで実行するだけの薄いファイル。
+ */
 /* istanbul ignore next */
 run()
-
-export { run }
 //# sourceMappingURL=index.js.map
