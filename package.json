@@ -25,7 +25,7 @@
   "author": "Atsushi Nakamura",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^2.0.1",
     "@actions/github": "^6.0.0",
     "@octokit/graphql": "^9.0.3",
     "tslib": "^2.8.1"
